@@ -1,0 +1,126 @@
+Velero Cli (toolbox в свой namespace) +
+Создать Бакет в s3 (контакт Никита Коротков) хранить последние 7 дней, текущие использование места на PVC + 30% запас +
+Инструкция в конфлюенсе
+
+
+NS - tech-confluence-jira
+User CEPH - obcr-idp-global-security-confjira
+Backet CEPH - obcb-idp-global-security-confjira-data-bucket
+Размер Bucket - 200 Гб
+
+Все PVC на данный момент используют 10ГБ ( 7 дней хранения это 10*7=70 ГБ)
+
+Role и Rolebinding в ns Velero
+
+Один лейбл на все PVC
+
+velero.io/volume-group: tech-confluence-jira-namespace
+
+
+Указать ns - cpaas-system
+
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: velero-bsl-isec-confjira
+  namespace: tech-storage
+  labels:
+    team: isec
+spec:
+  provider: aws
+  objectStorage:
+    bucket: obcb-idp-global-sec-3824ab-5cb9b75c-b5dc-4ae6-a3c7-804b6bc9317e
+    prefix: tech-confluence-jira
+	caCertRef:
+	  name: str.idp.ecpk.test-vault
+	  key: ca.crt
+  credential:
+    name: velero-credentials-isec-confjira
+    key: cloud
+  config:
+    region: kcod-ru
+    s3Url: https://str.idp.ecpk.test
+    s3ForcePathStyle: "true"
+  accessMode: ReadWrite
+  backupSyncPeriod: 2m
+  
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.cpaas.io/name: clusterrole.tech-confluence-jira
+  name: velero-backup-isec-confjira
+rules:
+  - apiGroups:
+      - "*"
+    resources:
+      - "*"
+    verbs:
+      - create
+      - get
+      - list
+      - watch
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.cpaas.io/name: clusterrole.tech-confluence-jira
+  name: velero-backup-binding-isec-confjira
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: velero-backup-isec-confjira
+subjects:
+  - kind: ServiceAccount
+    name: toolbox-isec
+    namespace: tech-confluence-jira
+
+
+Тестовые команды
+velero backup create resources-only-new --include-namespaces tech-confluence-jira --snapshot-volumes=false --ttl 10m --namespace tech-storage --storage-location backupstoragelocation-isec
+velero backup get --namespace tech-storage
+velero backup describe velero-backup-isec-confjira-daily-20260917010037 --namespace tech-storage
+
+kubectl get pvc -n velero-backup-isec-confjira-manual-20260916 --show-labels
+
+velero backup delete velero-backup-isec-confjira-new-20260916 --namespace tech-storage --confirm
+
+Основной бэкап
+velero backup create velero-backup-isec-confjira-manual-$(date +%Y%m%d) \
+  --include-namespaces tech-confluence-jira \
+  --exclude-resources events,events.events.k8s.io,gateways.gateway.networking.k8s.io,httproutes.gateway.networking.k8s.io \
+  --snapshot-move-data=true \
+  --namespace tech-storage \
+  --ttl 168h \
+  --storage-location velero-bsl-isec-confjira
+  
+  
+  
+Восстановление
+velero restore create confluence-jira-restore-$(date +%Y%m%d) \
+  --from-backup confluence-jira-backup-20260911 \
+  --namespace-mappings tech-confluence-jira:tech-tmp-confluence-jira \
+  --namespace cpaas-system
+ 
+Замена аннотаций (автоматизировать)
+kubectl get all,configmap,secret -n tech-tmp-confluence-jira -o json |   jq -r '.items[] | select(.metadata.annotations."meta.helm.sh/release-name"=="sdlc-16") | .kind + "/" + .metadata.name'
+Warning:
+Deployment/sdlc-16-exporter-pooler
+ReplicaSet/sdlc-16-exporter-pooler-6bd7f9b8f5
+ReplicaSet/sdlc-16-exporter-pooler-84696885bc
+postgresql/sdlc-16
+ConfigMap/sdlc-16-pgbouncer-exporter-config
+kubectl annotate configmap sdlc-16-pgbouncer-exporter-config -n tech-tmp-confluence-jira   meta.helm.sh/release-namespace=tech-tmp-confluence-jira --overwrite
+
+Расписание бэкапа
+velero schedule create velero-backup-isec-confjira-daily \
+  --schedule='0 1 * * *' \
+  --ttl 168h \
+  --include-namespaces tech-confluence-jira \
+  --exclude-resources events,events.events.k8s.io,gateways.gateway.networking.k8s.io,httproutes.gateway.networking.k8s.io \
+  --snapshot-move-data=true \
+  --namespace tech-storage \
+  --storage-location velero-bsl-isec-confjira
