@@ -1,0 +1,28 @@
+2026-11-26 17:34:30 INFO:root:Generating /opt/atlassian/confluence/conf/server.xml from template server.xml.j2
+2026-11-26 17:34:30 WARNING:root:Permission problem writing '/opt/atlassian/confluence/conf/server.xml': [Errno 30] Read-only file system: '/opt/atlassian/confluence/conf/server.xml'; skipping
+2026-11-26 17:34:30 INFO:root:Generating /opt/atlassian/confluence/confluence/WEB-INF/classes/seraph-config.xml from template seraph-config.xml.j2
+2026-11-26 17:34:30 WARNING:root:Permission problem writing '/opt/atlassian/confluence/confluence/WEB-INF/classes/seraph-config.xml': [Errno 13] Permission denied: '/opt/atlassian/confluence/confluence/WEB-INF/classes/seraph-config.xml'; skipping
+2026-11-26 17:34:30 INFO:root:Generating /opt/atlassian/confluence/confluence/WEB-INF/classes/confluence-init.properties from template confluence-init.properties.j2
+2026-11-26 17:34:30 WARNING:root:Permission problem writing '/opt/atlassian/confluence/confluence/WEB-INF/classes/confluence-init.properties': [Errno 13] Permission denied: '/opt/atlassian/confluence/confluence/WEB-INF/classes/confluence-init.properties'; skipping
+2026-11-26 17:34:30 INFO:root:Generating /var/atlassian/application-data/confluence/confluence.cfg.xml from template confluence.cfg.xml.j2
+2026-11-26 17:34:30 WARNING:root:Unsetting environment var ATL_JDBC_PASSWORD
+2026-11-26 17:34:30 INFO:root:Running Confluence with command '/opt/atlassian/confluence/bin/start-confluence.sh', arguments ['/opt/atlassian/confluence/bin/start-confluence.sh', '-fg']
+2026-11-26 17:34:30 executing as current user
+2026-11-26 17:34:30 If you encounter issues starting up Confluence, please see the Installation guide at http://confluence.atlassian.com/display/DOC/Confluence+Installation+Guide
+2026-11-26 17:34:30 
+2026-11-26 17:34:30 Server startup logs are located in /opt/atlassian/confluence/logs/catalina.out
+2026-11-26 17:34:30 ---------------------------------------------------------------------------
+2026-11-26 17:34:30 Using Java: /opt/java/openjdk/bin/java
+2026-11-26 17:34:31 2026-11-26 14:34:31,444 INFO [main] [atlassian.confluence.bootstrap.SynchronyProxyWatchdog] A Context element for ${confluence.context.path}/synchrony-proxy is found in /opt/atlassian/confluence/conf/server.xml. No further action is required
+2026-11-26 17:34:31 ---------------------------------------------------------------------------
+2026-11-26 17:34:31 NOTE: Picked up JDK_JAVA_OPTIONS:  --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED
+2026-11-26 17:34:31 26-Nov-2026 14:34:31.819 WARNING [main] org.apache.tomcat.util.digester.SetPropertiesRule.begin Match [Server/Service/Connector] failed to set property [debug] to [0]
+2026-11-26 17:34:31 26-Nov-2026 14:34:31.843 WARNING [main] org.apache.tomcat.util.digester.SetPropertiesRule.begin Match [Server/Service/Engine] failed to set property [debug] to [0]
+2026-11-26 17:34:31 26-Nov-2026 14:34:31.846 WARNING [main] org.apache.tomcat.util.digester.SetPropertiesRule.begin Match [Server/Service/Engine/Host] failed to set property [debug] to [0]
+2026-11-26 17:34:31 26-Nov-2026 14:34:31.874 WARNING [main] org.apache.tomcat.util.digester.SetPropertiesRule.begin Match [Server/Service/Engine/Host/Context] failed to set property [debug] to [0]
+2026-11-26 17:34:31 26-Nov-2026 14:34:31.940 WARNING [main] org.apache.tomcat.util.digester.SetPropertiesRule.begin Match [Server/Service/Engine/Host/Context/Valve] failed to set property [resolveHosts] to [false]
+2026-11-26 17:34:31 26-Nov-2026 14:34:31.941 WARNING [main] org.apache.tomcat.util.digester.SetPropertiesRule.begin Match [Server/Service/Engine/Host/Context] failed to set property [debug] to [0]
+2026-11-26 17:34:32 26-Nov-2026 14:34:32.267 INFO [main] org.apache.coyote.AbstractProtocol.init Initializing ProtocolHandler ["http-nio-8090"]
+2026-11-26 17:34:32 26-Nov-2026 14:34:32.314 INFO [main] org.apache.catalina.startup.Catalina.load Server initialization in [590] milliseconds
+2026-11-26 17:34:32 26-Nov-2026 14:34:32.320 INFO [main] org.apache.catalina.core.StandardService.startInternal Starting service [Catalina]
+2026-11-26 17:34:32 26-Nov-2026 14:34:32.320 INFO [main] org.apache.catalina.core.StandardEngine.startInternal Starting Servlet engine: [Apache Tomcat/9.0.104]
