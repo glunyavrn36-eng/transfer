@@ -1,1 +1,6 @@
-test file
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+        seccompProfile:
+          type: RuntimeDefault
+        readOnlyRootFilesystem: true
